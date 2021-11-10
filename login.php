@@ -1,10 +1,26 @@
 <?php
     session_start();
+    require 'functions.php';
+
+    if (isset($_COOKIE['id']) && isset($_COOKIE['key'])) {
+        
+        $id = $_COOKIE['id'];
+        $username = $_COOKIE['key'];
+
+        $res = mysqli_query($db, "SELECT username FROM user_practice WHERE id = $id");
+        $row = mysqli_fetch_assoc($res);
+
+        if($username === hash('sha256', $row['username']) ){
+            $_SESSION['login'] = true;
+        }
+    }
+    
+
     if (isset($_SESSION["login"])) {
         header("Location: table.php");
         exit;
     }
-    require 'functions.php';
+    
 
     if (isset($_POST["submit"])) {
         
@@ -20,8 +36,15 @@
             //Cek password
             $row = mysqli_fetch_assoc($query_user);
             if (password_verify($password, $row['password'])) {
-                header("Location: table.php");
                 $_SESSION["login"] = true;
+
+                //cookie
+                if(isset($_POST['remember'])){
+                    setcookie('id',$row['id'], time() + 120);
+                    setcookie('key', hash('sha256', $row['username']), time() + 120);
+                }
+
+                header("Location: table.php");
                 exit;
             }
         }
@@ -53,12 +76,13 @@
             <form action="" method="post">
 
             <ul>
-                <?php if(isset($error)): ?>
-                    <p style="color:red">Invalid username/password</p>
-                <?php endif; ?>
                 <li>
                     <h1>Login</h1>
                 </li>
+                
+                <?php if(isset($error)): ?>
+                    <p style="color:red">Invalid username/password</p>
+                <?php endif; ?>
 
                 <li>
                     <label for="username">Username</label><br>
@@ -69,6 +93,11 @@
                     <input type="password" name="password" id="password" required>
                 </li>
                     <br>
+                <li>
+                    <input type="checkbox" name="remember" id="remember">
+                    <label for="remember">Remember Me</label><br>
+                </li>
+                <br>
                 <li> 
                     <button type="submit" name="submit">Sign In</button>
                     <a href="registrasi.php">Sign Up</a>
