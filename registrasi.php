@@ -27,6 +27,10 @@
         ul {
             list-style-type: none;
         }
+        
+        button{
+            cursor: pointer;
+        }
     </style>
     <title>Sign Up</title>
 </head>
@@ -34,9 +38,13 @@
 
     <div class="container">
 
-        <h1>SIGN UP</h1>
+        
         <form action="" method="post">
             <ul>
+                <li>
+                    <h1>Sign Up</h1>
+                </li>
+
                 <li>
                     <label for="username">Username</label> <br>
                     <input type="text" name="username" id="username" required>

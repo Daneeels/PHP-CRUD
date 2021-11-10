@@ -1,4 +1,9 @@
 <?php 
+    session_start();
+    if (!isset($_SESSION["login"])) {
+        header("Location: login.php");
+        exit;
+    }
 
 require 'functions.php';
 
@@ -48,7 +53,7 @@ if(isset($_POST['cari'])){
             border-radius: 5px;
         }
 
-        .hapus{
+        .red{
             background-color:#df2800;
             color: white;
             border-radius: 5px;
@@ -59,7 +64,10 @@ if(isset($_POST['cari'])){
 <body>
     
     <div class="container">
+        
+
         <h1>Daftar Mahasiswa</h1>
+        <button class="red"><a href="logout.php" style="text-decoration: none; color: black">Logout</a></button>
         <button class="tambah"><a href="insert.php">Tambah data</a></button>
         
         <form action="" method="post">
@@ -94,7 +102,7 @@ if(isset($_POST['cari'])){
                 <td>
                     <button class="ubah"><a href="update.php?n=<?= $row["id"]?>">Ubah</a></button>
                     <br>
-                    <button class="hapus" onclick="return confirm('Anda yakin ingin menghapus?')"><a href="delete.php?n=<?php echo $row["id"]?>">Hapus</a></button>
+                    <button class="red" onclick="return confirm('Anda yakin ingin menghapus?')"><a href="delete.php?n=<?php echo $row["id"]?>">Hapus</a></button>
                 </td>
                 <td><img src="img/<?= $row["gambar"]; ?>" alt="" width="70px"></td>
                 <td><?= $row["nama"]; ?></td>

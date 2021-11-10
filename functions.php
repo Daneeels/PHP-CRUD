@@ -1,4 +1,4 @@
-<?php 
+<?php
 //Connect database
 $db = mysqli_connect("localhost","root","paw48","pemweb");
 
