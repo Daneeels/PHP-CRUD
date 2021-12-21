@@ -7,9 +7,14 @@
 
 require 'functions.php';
 
-
+//Pagination
+$jumlah_pingin = 2;
+$jumlahData = count(query("SELECT * FROM mahasiswa"));
+$jumlahHalaman = ceil($jumlahData/$jumlah_pingin);
+$halamanAktif = ( isset($_GET['p'])) ? $_GET['p'] : 1;
+$dataAwal = ($jumlah_pingin * $halamanAktif) - $jumlah_pingin;
 //Connect table
-$mahasiswa = query("SELECT * FROM mahasiswa");
+$mahasiswa = query("SELECT * FROM mahasiswa LIMIT $dataAwal, $jumlah_pingin");
 
 if(isset($_POST['cari'])){
     $mahasiswa = cari($_POST['keyword']);
@@ -59,6 +64,17 @@ if(isset($_POST['cari'])){
             border-radius: 5px;
         }
 
+        .pagination{
+            text-decoration: underline;
+            color:blue;
+            font-size: 1.5em;
+            padding: 0.5em;
+        }
+
+        .active{
+            font-weight: 900px;
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -114,9 +130,31 @@ if(isset($_POST['cari'])){
 
             <?php $i++; ?>
             <?php endforeach; ?>
+
         </tbody>
 
         </table>
+
+        <br>
+        <?php if($halamanAktif > 1) :?>
+        <a href="?p=<?= $halamanAktif - 1?>">&laquo;</a>
+        <?php endif; ?>
+
+        <?php for($i = 1; $i <= $jumlahHalaman; $i++) : ?>
+            <?php if ($i == $halamanAktif) :?>
+                <a class="pagination active" href="?p=<?= $i ?>"><?= $i?></a>
+
+            <?php else :?>
+                
+                <a class="pagination" href="?p=<?= $i ?>"><?= $i?></a>
+            
+            <?php endif; ?>
+            
+        <?php endfor; ?>
+
+        <?php if($halamanAktif < $jumlahHalaman) :?>
+        <a href="?p=<?= $halamanAktif + 1?>">&raquo;</a>
+        <?php endif; ?>
     </div>
     
 </body>
